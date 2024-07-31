@@ -11,7 +11,7 @@ export class Bottle<
     T extends Providers,
     U extends { container: any } | undefined = undefined,
 > {
-    protected _instances = new Map<ServiceName, any>();
+    protected _instances: Map<ServiceName, any> = new Map<ServiceName, any>();
 
     public container: AssertValid<
         Simplify<BottleLike<T, U>['container']>,
