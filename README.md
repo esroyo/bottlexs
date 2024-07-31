@@ -1,7 +1,7 @@
 # Bottle XS 👕
 [![JSR](https://jsr.io/badges/@esroyo/bottlexs)](https://jsr.io/@esroyo/bottlexs) [![JSR Score](https://jsr.io/badges/@esroyo/bottlexs/score)](https://jsr.io/@esroyo/bottlexs) [![codecov](https://codecov.io/gh/esroyo/bottlexs/graph/badge.svg?token=K4YA3R80FB)](https://codecov.io/gh/esroyo/bottlexs)
 
-A dependency injection ~~micro~~ nano container that draws inspiration from [BottleJS](https://www.npmjs.com/package/bottlejs) (for concepts) and [Zod](https://www.npmjs.com/package/bottlejs) (for type inference and composability).
+A dependency injection ~~micro~~ nano container that draws inspiration from [BottleJS](https://www.npmjs.com/package/bottlejs) (for concepts) and [Zod](https://www.npmjs.com/package/zod) (for type inference and composability).
 
 # Basic usage
 
