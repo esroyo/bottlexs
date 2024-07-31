@@ -1,0 +1,27 @@
+{
+  "version": "0.0.0",
+  "name": "@esroyo/bottlexs",
+  "exports": "./mod.ts",
+  "tasks": {
+    "coverage": "rm -rf coverage && deno task test --reporter=dot --coverage=coverage && deno coverage --lcov --output=coverage.lcov coverage && genhtml -o coverage/report coverage.lcov",
+    "fmt": "deno fmt src/ dev_deps.ts example.ts",
+    "tag-version": "npx commit-and-tag-version && git push --follow-tags origin main",
+    "test": "deno test --allow-hrtime"
+  },
+  "fmt": {
+    "indentWidth": 4,
+    "singleQuote": true
+  },
+  "compilerOptions": {
+    "experimentalDecorators": false
+  },
+  "publish": {
+    "include": [
+      "mod.ts",
+      "src/",
+      "README.md",
+      "CHANGELOG.md",
+      "deno.jsonc"
+    ]
+  }
+}
