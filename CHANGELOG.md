@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.0](https://github.com/esroyo/bottlexs/compare/v0.1.0...v0.2.0) (2024-08-01)
+
+
+### Features
+
+* support for own key operations ([bcdc789](https://github.com/esroyo/bottlexs/commit/bcdc789537ff7665ff02535b41fc2ca761edaa7e))
+
 ## 0.1.0 (2024-07-31)
 
 
