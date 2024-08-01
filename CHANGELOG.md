@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.3.1](https://github.com/esroyo/bottlexs/compare/v0.3.0...v0.3.1) (2024-08-01)
+
+
+### Other
+
+* detail on example ([3b62425](https://github.com/esroyo/bottlexs/commit/3b6242531fb51a3316b9b5f558eba0482616c484))
+* simplify dependents typing ([1be1d5e](https://github.com/esroyo/bottlexs/commit/1be1d5efb34a0168ac622298c2ef3be110a44ad6))
+
 ## [0.3.0](https://github.com/esroyo/bottlexs/compare/v0.2.0...v0.3.0) (2024-08-01)
 
 
