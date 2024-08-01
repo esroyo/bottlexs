@@ -87,6 +87,33 @@ Deno.test('Bottle (standalone)', async (t) => {
         assertSpyCalls(providers.hops, 1);
         assertSpyCalls(providers.water, 1);
     });
+
+    await t.step(
+        'should be able to remove an instance with the [[Delete]] operation',
+        async () => {
+            assertSpyCalls(providers.water, 1);
+            assertSpyCalls(providers.barley, 1);
+            assertSpyCalls(providers.hops, 1);
+            assertSpyCalls(providers.beer, 1);
+
+            // @ts-ignore: does not really need to be declared as optional
+            assertEquals(delete bottle.container.hops, true);
+
+            assertEquals(bottle.container.beer instanceof Beer, true);
+            assertSpyCalls(providers.water, 1);
+            assertSpyCalls(providers.barley, 1);
+            assertSpyCalls(providers.beer, 2);
+            assertSpyCalls(providers.hops, 2);
+        },
+    );
+
+    await t.step(
+        'should not throw if [[Delete]] is performed over a non-existant service ',
+        async () => {
+            // @ts-ignore: does not really need to be declared as optional
+            assertEquals(delete bottle.container.malt, true);
+        },
+    );
 });
 
 Deno.test('Bottle (with an standalone ancestor)', async (t) => {
@@ -174,4 +201,31 @@ Deno.test('Bottle (with an standalone ancestor)', async (t) => {
         assertSpyCalls(ancestorProviders.hops, 1);
         assertSpyCalls(ancestorProviders.water, 1);
     });
+
+    await t.step(
+        'should be able to remove an instance with the [[Delete]] operation',
+        async () => {
+            assertSpyCalls(ancestorProviders.water, 1);
+            assertSpyCalls(ancestorProviders.barley, 1);
+            assertSpyCalls(ancestorProviders.hops, 1);
+            assertSpyCalls(providers.beer, 1);
+
+            // @ts-ignore: does not really need to be declared as optional
+            assertEquals(delete bottle.container.hops, true);
+
+            assertEquals(bottle.container.beer instanceof Beer, true);
+            assertSpyCalls(ancestorProviders.water, 1);
+            assertSpyCalls(ancestorProviders.barley, 1);
+            assertSpyCalls(providers.beer, 2);
+            assertSpyCalls(ancestorProviders.hops, 2);
+        },
+    );
+
+    await t.step(
+        'should not throw if [[Delete]] is performed over a non-existant service ',
+        async () => {
+            // @ts-ignore: does not really need to be declared as optional
+            assertEquals(delete bottle.container.malt, true);
+        },
+    );
 });
