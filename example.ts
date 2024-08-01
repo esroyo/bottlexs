@@ -51,3 +51,6 @@ type OtherServices = typeof otherBottle.container;
 
 console.log(otherBottle.container.beer.name);
 // "San Miguel"
+
+console.log(someBottle.container.water === otherBottle.container.beer.water);
+// true
