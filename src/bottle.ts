@@ -37,8 +37,8 @@ export class Bottle<
                         const [dependentServiceName, bottleInstance]
                             of dependentServices
                     ) {
-                        // @ts-ignore: the dependent service might be on another bottle though
                         delete (bottleInstance || this)
+                            // @ts-ignore: the dependent service might be on another bottle though
                             .container[dependentServiceName];
                     }
                 }
