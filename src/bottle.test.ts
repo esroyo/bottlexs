@@ -46,6 +46,20 @@ Deno.test('Bottle (standalone)', async (t) => {
         },
     );
 
+    await t.step(
+        'should respond to [[OwnPropertyKeys]] operations with instantiated services (does not trigger instantiation)',
+        async () => {
+            assertEquals(Object.keys(bottle.container), []);
+            assertEquals(Object.keys({ ...bottle.container }).length, 0);
+
+            assertEquals(bottle.container.water instanceof Water, true);
+            assertSpyCalls(providers.water, 1);
+
+            assertEquals(Object.keys(bottle.container), ['water']);
+            assertEquals(Object.keys({ ...bottle.container }).length, 1);
+        },
+    );
+
     await t.step('should throw if an unknown service is accessed', async () => {
         assertThrows(() => {
             // @ts-expect-error
@@ -116,6 +130,20 @@ Deno.test('Bottle (with an standalone ancestor)', async (t) => {
             assertSpyCalls(providers.beer, 0);
             // will not throw
             assertEquals('malt' in bottle.container, false);
+        },
+    );
+
+    await t.step(
+        'should respond to [[OwnPropertyKeys]] operations with instantiated services (does not trigger instantiation)',
+        async () => {
+            assertEquals(Object.keys(bottle.container), []);
+            assertEquals(Object.keys({ ...bottle.container }).length, 0);
+
+            assertEquals(bottle.container.water instanceof Water, true);
+            assertSpyCalls(ancestorProviders.water, 1);
+
+            assertEquals(Object.keys(bottle.container), ['water']);
+            assertEquals(Object.keys({ ...bottle.container }).length, 1);
         },
     );
 

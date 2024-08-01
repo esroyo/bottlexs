@@ -32,6 +32,9 @@ export class Bottle<
             }
             return this._instances.get(prop);
         },
+        getOwnPropertyDescriptor: (_, _prop: ServiceName) => {
+            return { configurable: true, enumerable: true, writable: false };
+        },
         has: (_, prop: ServiceName) => {
             if (prop in this._providers) {
                 return true;
@@ -41,6 +44,13 @@ export class Bottle<
             }
             return false;
         },
+        ownKeys: (_) => {
+            const keys = [...this._instances.keys()];
+            if (this._ancestor) {
+                keys.push(...Reflect.ownKeys(this._ancestor.container));
+            }
+            return keys;
+        }
     });
 
     constructor(
