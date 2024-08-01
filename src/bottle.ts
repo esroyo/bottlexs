@@ -13,14 +13,13 @@ export class Bottle<
 > {
     protected _dependents: Map<
         ServiceName,
-        Set<[ServiceName, Bottle<any, any> | undefined]>
+        Set<[ServiceName, Bottle<any, any>]>
     > = new Map<
         ServiceName,
-        Set<[ServiceName, Bottle<any, any> | undefined]>
+        Set<[ServiceName, Bottle<any, any>]>
     >();
     protected _instances: Map<ServiceName, any> = new Map<ServiceName, any>();
-    protected _tracking: Array<[ServiceName, Bottle<any, any> | undefined]> =
-        [];
+    protected _tracking: Array<[ServiceName, Bottle<any, any>]> = [];
 
     public container: AssertValid<
         Simplify<BottleLike<T, U>['container']>,
@@ -37,9 +36,8 @@ export class Bottle<
                         const [dependentServiceName, bottleInstance]
                             of dependentServices
                     ) {
-                        delete (bottleInstance || this)
-                            // @ts-ignore: the dependent service might be on another bottle though
-                            .container[dependentServiceName];
+                        // @ts-ignore: the dependent service might be on another bottle though
+                        delete bottleInstance.container[dependentServiceName];
                     }
                 }
                 // And finally delete the target service
@@ -84,7 +82,7 @@ export class Bottle<
                 this._dependents.set(
                     serviceName,
                     (this._dependents.get(serviceName) ||
-                        new Set<[ServiceName, Bottle<any, any> | undefined]>())
+                        new Set<[ServiceName, Bottle<any, any>]>())
                         .add(currentInstantiation),
                 );
             }
@@ -120,7 +118,10 @@ export class Bottle<
         protected _ancestor?: U,
     ) {}
 
-    protected _track(prop: ServiceName, bottleInstance?: Bottle<any, any>) {
+    protected _track(
+        prop: ServiceName,
+        bottleInstance: Bottle<any, any> = this,
+    ) {
         this._tracking.push([prop, bottleInstance]);
         if (this._ancestor) {
             // @ts-ignore: privileged access to private prop
