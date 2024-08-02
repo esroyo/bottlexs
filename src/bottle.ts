@@ -8,8 +8,12 @@ import type {
 } from './types.ts';
 
 /**
- * Given a Providers definition It builds an object that exposes a `container` property
- * where the services may be accessed and instantiated just-in-time.
+ * Given a providers definition, builds an object that exposes a `container`
+ * property where the services may be accessed (instantiated just-in-time).
+ *
+ * Optionally takes another Bottle instance as a second paramter. In that
+ * case the `container` gives access to all the services, its own and those
+ * inherited from the other Bottle.
  *
  * @example
  * ```ts

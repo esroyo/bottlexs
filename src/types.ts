@@ -25,15 +25,17 @@ export type Factory = (container: any) => any;
 export type Providers = Record<ServiceName, Factory>;
 
 /**
- * Extract Service types inferred from the Factories retun type.
+ * Extract Service types inferred from the Factories return type.
  */
 export type Services<T extends Providers> = {
     [Key in keyof T]: ReturnType<T[Key]>;
 };
 
 /**
- * Extract the declared first parameter from the Factories,
- * which represents the shape each factory expects from the Container.
+ * Extract the declared first parameter from the Factories.
+ * This first parameter represents the shape that each factory
+ * expects from the Container. The intersection of all those
+ * expectations is the Dependencies final type.
  */
 export type Dependencies<T extends Providers> = UnionToIntersection<
     NonNullable<
@@ -44,15 +46,15 @@ export type Dependencies<T extends Providers> = UnionToIntersection<
 >;
 
 /**
- * Given a Container asserts that it is valid to fullfill the shape of the Deps.
- * When the assertion can't be satisfied returns never, to make the result unusable.
+ * Given a Container, asserts that It can provide the shape required by Deps.
+ * When the assertion can't be satisfied, returns `never` to block usage.
  */
 export type AssertValidContainer<Container, Deps> = Container extends Deps
     ? Container
     : never;
 
 /**
- * The minimal public interface of a Bottle like object.
+ * The minimal public interface for a Bottle like object.
  */
 export type BottleLike<Container = any> = {
     container: Container;
@@ -67,8 +69,8 @@ type RawMergedContainer<
     : never;
 
 /**
- * Build the resulting merged shape of the given Providers type
- * plus an another optional Bottle like type.
+ * Build the resulting merged shape of a Providers type,
+ * plus another optional Bottle like type.
  */
 export type MergedContainer<
     T extends Providers,

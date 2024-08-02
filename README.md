@@ -4,14 +4,14 @@
 A dependency injection ~~micro~~ nano container that draws inspiration from [BottleJS](https://www.npmjs.com/package/bottlejs) (for concepts) and [Zod](https://www.npmjs.com/package/zod) (for type inference and composability).
 
 # Features
-* :sparkles: Type inference of the services just works
-* :zap: < 500 bytes (when minified, mangled and gzipped)
-* :beer: Terse lazy-loading access to the services as in BottleJS 
-* :factory: Supports (only) the [service factory](https://www.npmjs.com/package/bottlejs#service-factory) from BottleJS to define providers
-* :recycle: Possiblity to reset the providers to re-instantiate a service
-* :paw_prints: Tracks dependencies: reseting a provider will reset all the dependents (opt-out possible)
-* :lock: Favors immutability by taking the providers at construction time
-* :electric_plug: Favors composability by inheriting from other containers
+* ✨ Type inference of the services just works
+* ⚡ < 500 bytes (when minified, mangled and gzipped)
+* 🍺 Terse lazy-loading access to the services as in BottleJS 
+* 🏭 Supports (only) the [service factory](https://www.npmjs.com/package/bottlejs#service-factory) from BottleJS to define providers
+* ♻️ Possiblity to reset the providers to re-instantiate a service
+* 🐾 Tracks dependencies: reseting a provider will reset all the dependents (opt-out possible)
+* 🔒 Favors immutability by taking the providers at construction time
+* 🔌 Favors composability by inheriting from other containers
 
 # Basic usage
 
