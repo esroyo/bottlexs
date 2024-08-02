@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.0](https://github.com/esroyo/bottlexs/compare/v0.3.2...v0.4.0) (2024-08-02)
+
+
+### Features
+
+* add delete service method (with deep param optional, defaults to true) ([f6a04fb](https://github.com/esroyo/bottlexs/commit/f6a04fbede002794262754e5b5eafa8231be84b2))
+
+
+### Other
+
+* add minimal comments to types and class ([98dd41d](https://github.com/esroyo/bottlexs/commit/98dd41df696da06196bba5530f1e5a0b5e3b96a1))
+
 ## [0.3.2](https://github.com/esroyo/bottlexs/compare/v0.3.1...v0.3.2) (2024-08-01)
 
 
