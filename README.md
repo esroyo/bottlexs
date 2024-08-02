@@ -3,7 +3,7 @@
 
 A dependency injection ~~micro~~ nano container that draws inspiration from [BottleJS](https://www.npmjs.com/package/bottlejs) (for concepts) and [Zod](https://www.npmjs.com/package/zod) (for type inference and composability).
 
-# Features
+## Features
 * ✨ Type inference of the services just works
 * ⚡ < 500 bytes (when minified, mangled and gzipped)
 * 🍺 Terse lazy-loading access to the services as in BottleJS 
@@ -13,7 +13,7 @@ A dependency injection ~~micro~~ nano container that draws inspiration from [Bot
 * 🔒 Favors immutability by taking the providers at construction time
 * 🔌 Favors composability by inheriting from other containers
 
-# Basic usage
+## Basic usage
 
 ```ts
 class Water {}
