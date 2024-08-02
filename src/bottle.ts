@@ -132,7 +132,7 @@ export class Bottle<
      * Dependencies tracking is limited to accesses done during the
      * factory execution.
      */
-    public delete(serviceName: ServiceName, deep = true) {
+    public delete(serviceName: ServiceName, deep = true): boolean {
         // If the deleted service is my own
         if (this._isOwnService(serviceName)) {
             // Then I'm the bottle that keeps track of the dependent services.
@@ -159,7 +159,7 @@ export class Bottle<
         return false;
     }
 
-    protected _isOwnService(serviceName: ServiceName) {
+    protected _isOwnService(serviceName: ServiceName): boolean {
         return serviceName in this._providers;
     }
 
