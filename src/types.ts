@@ -1,10 +1,10 @@
-export type ConstructorParameters<T> = T extends new (...args: infer U) => any
+type ConstructorParameters<T> = T extends new (...args: infer U) => any
     ? U
     : never;
 
-export type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
+type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
 
-export type UnionToIntersection<Union> = (
+type UnionToIntersection<Union> = (
     // `extends unknown` is always going to be the case and is used to convert the
     // `Union` into a [distributive conditional
     // type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
@@ -37,12 +37,23 @@ export type Dependencies<T extends Providers> = UnionToIntersection<
     >
 >;
 
-export type AssertValid<Container, Deps> = Container extends Deps ? Container
+export type AssertValidContainer<Container, Deps> = Container extends Deps
+    ? Container
     : never;
 
-export type BottleLike<
+export type BottleLike<Container = any> = {
+    container: Container;
+    delete(serviceName: ServiceName, deep?: boolean): boolean;
+};
+
+export type RawMergedContainer<
     T extends Providers,
-    U extends { container: any } | undefined = undefined,
-> = U extends undefined ? { container: Services<T> }
-    : U extends { container: any } ? { container: Services<T> } & U
+    U extends BottleLike | undefined = undefined,
+> = U extends undefined ? Services<T>
+    : U extends BottleLike ? Services<T> & U['container']
     : never;
+
+export type MergedContainer<
+    T extends Providers,
+    U extends BottleLike | undefined = undefined,
+> = Simplify<RawMergedContainer<T, U>>;

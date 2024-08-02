@@ -1,58 +1,38 @@
 import type {
-    AssertValid,
+    AssertValidContainer,
+    MergedContainer,
     BottleLike,
     Dependencies,
     Providers,
     ServiceName,
-    Simplify,
 } from './types.ts';
 
 export class Bottle<
     T extends Providers,
-    U extends { container: any } | undefined = undefined,
-> {
+    U extends BottleLike | undefined = undefined,
+> implements BottleLike {
     protected _dependents: Map<
         ServiceName,
-        Set<[ServiceName, Bottle<any, any>]>
+        Set<[ServiceName, BottleLike]>
     > = new Map<
         ServiceName,
-        Set<[ServiceName, Bottle<any, any>]>
+        Set<[ServiceName, BottleLike]>
     >();
     protected _instances: Map<ServiceName, any> = new Map<ServiceName, any>();
-    protected _tracking: Array<[ServiceName, Bottle<any, any>]> = [];
+    protected _tracking: Array<[ServiceName, BottleLike]> = [];
 
-    public container: AssertValid<
-        Simplify<BottleLike<T, U>['container']>,
+    public container: AssertValidContainer<
+        MergedContainer<T, U>,
         Dependencies<T>
     > = new Proxy({} as typeof this.container, {
         deleteProperty: (_, serviceName: ServiceName) => {
-            // If the deteled service is my own
-            if (serviceName in this._providers) {
-                // Then I'm the bottle that keeps track of the dependent services.
-                // Let's delete any services that depends on this one.
-                const dependentServices = this._dependents.get(serviceName);
-                if (dependentServices) {
-                    for (
-                        const [dependentServiceName, bottleInstance]
-                            of dependentServices
-                    ) {
-                        // @ts-ignore: the dependent service might be on another bottle though
-                        delete bottleInstance.container[dependentServiceName];
-                    }
-                }
-                // And finally delete the target service
-                return this._instances.delete(serviceName);
-            }
-            // If the deteled service is not mine, must be from an ancestor
-            if (this._ancestor) {
-                return delete this._ancestor.container[serviceName];
-            }
+            this.delete(serviceName);
             // In any case keep the behaviour of "delete" on plain objects (do not throw)
             return true;
         },
         get: (_, serviceName: ServiceName) => {
             // If the accessed service is NOT my own
-            if (!(serviceName in this._providers)) {
+            if (!this._isOwnService(serviceName)) {
                 // Then It must be from an ancestor
                 if (this._ancestor) {
                     return this._ancestor.container[serviceName];
@@ -89,17 +69,17 @@ export class Bottle<
             // Finally return the accessed service instance
             return this._instances.get(serviceName);
         },
-        getOwnPropertyDescriptor: (_, _prop: ServiceName) => {
+        getOwnPropertyDescriptor: (_, _serviceName: ServiceName) => {
             return { configurable: true, enumerable: true, writable: false };
         },
-        has: (_, prop: ServiceName) => {
+        has: (_, serviceName: ServiceName) => {
             // Either the accessed service is my own
-            if (prop in this._providers) {
+            if (this._isOwnService(serviceName)) {
                 return true;
             }
             // Or It must be from an ancestor
             if (this._ancestor) {
-                return prop in this._ancestor.container;
+                return serviceName in this._ancestor.container;
             }
             // Or It does not exist
             return false;
@@ -118,14 +98,45 @@ export class Bottle<
         protected _ancestor?: U,
     ) {}
 
+    public delete(serviceName: ServiceName, deep = true) {
+        // If the deleted service is my own
+        if (this._isOwnService(serviceName)) {
+            // Then I'm the bottle that keeps track of the dependent services.
+            if (deep) {
+                // Let's delete any services that depends on this one.
+                const dependentServices = this._dependents.get(serviceName);
+                if (dependentServices) {
+                    for (
+                        const [dependentServiceName, bottleInstance]
+                            of dependentServices
+                    ) {
+                        bottleInstance.delete(dependentServiceName);
+                    }
+                }
+            }
+            // And finally delete the target service
+            return this._instances.delete(serviceName);
+        }
+        // If the deteled service is not mine, must be from an ancestor
+        if (this._ancestor) {
+            return this._ancestor.delete(serviceName, deep);
+        }
+        // Or otherwise it does not exist
+        return false;
+    }
+
+    protected _isOwnService(serviceName: ServiceName) {
+        return serviceName in this._providers;
+    }
+
     protected _track(
-        prop: ServiceName,
-        bottleInstance: Bottle<any, any> = this,
+        serviceName: ServiceName,
+        bottleInstance: BottleLike = this,
     ) {
-        this._tracking.push([prop, bottleInstance]);
+        this._tracking.push([serviceName, bottleInstance]);
         if (this._ancestor) {
             // @ts-ignore: privileged access to private prop
-            this._ancestor._track(prop, this);
+            this._ancestor._track(serviceName, this);
         }
     }
 

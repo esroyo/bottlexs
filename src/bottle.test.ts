@@ -33,6 +33,7 @@ Deno.test('Bottle (standalone)', async (t) => {
             },
         ) => new Beer('San Miguel', barley, hops, water)),
         water: spy(() => new Water()),
+        now: spy(() => Date.now),
     };
     const bottle = new Bottle(providers);
 
@@ -114,6 +115,10 @@ Deno.test('Bottle (standalone)', async (t) => {
             assertEquals(delete bottle.container.malt, true);
         },
     );
+
+    await t.step('should never call the factory of an unaccessed service', async () => {
+        assertSpyCalls(providers.now, 0);
+    });
 });
 
 Deno.test('Bottle (with an standalone ancestor)', async (t) => {
@@ -136,6 +141,7 @@ Deno.test('Bottle (with an standalone ancestor)', async (t) => {
         barley: spy(({ water }: { water: Water }) => new Barley(water)),
         hops: spy(({ water }: { water: Water }) => new Hops(water)),
         water: spy(() => new Water()),
+        now: spy(() => Date.now),
     };
     const ancestor = new Bottle(ancestorProviders);
 
@@ -228,4 +234,8 @@ Deno.test('Bottle (with an standalone ancestor)', async (t) => {
             assertEquals(delete bottle.container.malt, true);
         },
     );
+
+    await t.step('should never call the factory of an unaccessed service', async () => {
+        assertSpyCalls(ancestorProviders.now, 0);
+    });
 });
