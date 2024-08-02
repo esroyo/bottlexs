@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.2](https://github.com/esroyo/bottlexs/compare/v0.4.1...v0.4.2) (2024-08-02)
+
+
+### Other
+
+* minor improvements ([ffd7474](https://github.com/esroyo/bottlexs/commit/ffd74741938a51c348498a7ec969723331cde8e7))
+
 ## [0.4.1](https://github.com/esroyo/bottlexs/compare/v0.4.0...v0.4.1) (2024-08-02)
 
 ## [0.4.0](https://github.com/esroyo/bottlexs/compare/v0.3.2...v0.4.0) (2024-08-02)
