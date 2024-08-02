@@ -1,12 +1,36 @@
 import type {
     AssertValidContainer,
-    MergedContainer,
     BottleLike,
     Dependencies,
+    MergedContainer,
     Providers,
     ServiceName,
 } from './types.ts';
 
+/**
+ * Given a Providers definition It builds an object that exposes a `container` property
+ * where the services may be accessed and instantiated just-in-time.
+ *
+ * @example
+ * ```ts
+ * class Water {
+ *   public origin = 'Antarctica'
+ * }
+ * class Barley {
+ *   constructor(public water: Water) {}
+ * }
+ *
+ * const providers = {
+ *   barley: (container: { water: Water }) => new Barley(container.water),
+ *   water: () => new Water(),
+ * };
+ * const bottle = new Bottle(providers);
+ * console.log(bottle.container.barley.water.origin);
+ * // Antarctica
+ * console.log(bottle.container.barley.water === bottle.container.water);
+ * // true
+ * ```
+ */
 export class Bottle<
     T extends Providers,
     U extends BottleLike | undefined = undefined,
@@ -98,6 +122,16 @@ export class Bottle<
         protected _ancestor?: U,
     ) {}
 
+    /**
+     * Reset a given provider by removing the existing instance.
+     *
+     * By default will reset any provider that depends on this one.
+     * Pass `false` as the second parameter to limit the reset to
+     * this specific service.
+     *
+     * Dependencies tracking is limited to accesses done during the
+     * factory execution.
+     */
     public delete(serviceName: ServiceName, deep = true) {
         // If the deleted service is my own
         if (this._isOwnService(serviceName)) {

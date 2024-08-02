@@ -116,9 +116,12 @@ Deno.test('Bottle (standalone)', async (t) => {
         },
     );
 
-    await t.step('should never call the factory of an unaccessed service', async () => {
-        assertSpyCalls(providers.now, 0);
-    });
+    await t.step(
+        'should never call the factory of an unaccessed service',
+        async () => {
+            assertSpyCalls(providers.now, 0);
+        },
+    );
 });
 
 Deno.test('Bottle (with an standalone ancestor)', async (t) => {
@@ -235,7 +238,10 @@ Deno.test('Bottle (with an standalone ancestor)', async (t) => {
         },
     );
 
-    await t.step('should never call the factory of an unaccessed service', async () => {
-        assertSpyCalls(ancestorProviders.now, 0);
-    });
+    await t.step(
+        'should never call the factory of an unaccessed service',
+        async () => {
+            assertSpyCalls(ancestorProviders.now, 0);
+        },
+    );
 });
