@@ -14,12 +14,77 @@ A dependency injection ~~micro~~ nano container that draws inspiration from [Bot
 * 🔒 Favors immutability by taking the providers at construction time
 * 🔌 Favors composability by inheriting from other containers
 
-## Usage examples
+## Examples
 
-### Multiple bottle instances
+### Basic usage
 
 ```ts
-import { Bottle, service } from 'jsr:@esroyo/bottlexs';
+import { Bottle } from 'jsr:@esroyo/bottlexs';
+
+interface BarleyLike {
+    water: Water;
+}
+
+interface HopsLike {
+    water: Water;
+}
+
+class Water {}
+class Nordal implements BarleyLike {
+    constructor(public water: Water) {}
+}
+class Hallertau implements HopsLike {
+    constructor(public water: Water) {}
+}
+class Beer {
+    public brand = 'San Miguel';
+    constructor(
+        public barley: BarleyLike,
+        public hops: HopsLike,
+        public water: Water,
+    ) {}
+}
+
+// Services are defined with a name `string | symbol` and a `Factory` function.
+// A factory function receives an object as an argument (the container), and
+// should return the constructed service.
+//
+// The accurate typing of the object expected by each Factory is important.
+// The Factory declaration is used to typecheck that all expected dependencies
+// are effectively available at the end of the day.
+const providers = {
+    barley: (container: { water: Water }) => new Nordal(container.water),
+    hops: (container: { water: Water }) => new Hallertau(container.water),
+    water: () => new Water(),
+    beer: (
+        container: { barley: BarleyLike; hops: HopsLike; water: Water },
+    ) => new Beer(container.barley, container.hops, container.water),
+};
+const bottle = new Bottle(providers);
+
+// inferred type
+type Services = typeof bottle.container;
+// type SomeServices = {
+//     barley: Nordal;
+//     hops: Hallertau;
+//     water: Water;
+//     beer: Beer;
+// }
+
+console.log(bottle.container.beer.brand);
+// "San Miguel"
+
+console.log(
+    bottle.container.water ===
+        bottle.container.beer.water,
+);
+// true
+```
+
+### Inherit/compose in multiple bottle instances
+
+```ts
+import { Bottle } from 'jsr:@esroyo/bottlexs';
 
 class Water {}
 class Barley {
@@ -29,8 +94,8 @@ class Hops {
     constructor(public water: Water) {}
 }
 class Beer {
+    public brand = 'San Miguel';
     constructor(
-        public name: string,
         public barley: Barley,
         public hops: Hops,
         public water: Water,
@@ -39,9 +104,7 @@ class Beer {
 
 const someProviders = {
     barley: ({ water }: { water: Water }) => new Barley(water),
-    // It is possible to use the alternative `service` helper
-    // hops: ({ water }: { water: Water }) => new Hops(water),
-    hops: service(Hops, ['water'] as const),
+    hops: ({ water }: { water: Water }) => new Hops(water),
     water: () => new Water(),
 };
 const someBottle = new Bottle(someProviders);
@@ -58,7 +121,7 @@ const someOtherProviders = {
     now: () => Date.now,
     beer: (
         { barley, hops, water }: { barley: Barley; hops: Hops; water: Water },
-    ) => new Beer('San Miguel', barley, hops, water),
+    ) => new Beer(barley, hops, water),
 };
 const otherBottle = new Bottle(someOtherProviders, someBottle);
 
@@ -72,7 +135,7 @@ type OtherServices = typeof otherBottle.container;
 //     water: Water;
 // }
 
-console.log(otherBottle.container.beer.name);
+console.log(otherBottle.container.beer.brand);
 // "San Miguel"
 
 console.log(
@@ -82,7 +145,7 @@ console.log(
 // true
 ```
 
-### Using the service helper with constructors
+### Use the `service` helper with constructors
 
 ```ts
 import { Bottle, service } from 'jsr:@esroyo/bottlexs';
@@ -96,12 +159,12 @@ class Hops {
 }
 
 const providers = {
-    // The default Provider pattern is the Factory pattern:
+    // The default provider pattern is the Factory pattern:
     // receives the container as parameter and returns an instance
     barley: (container: { water: Water }) => new Barley(container.water),
     water: () => new Water(),
     // It is possible to use the alternative `service` helper:
-    // takes in a Constructor and a list of services to be resolved
+    // takes in a Constructor, and a list of services to be resolved
     // and passed as arguments to the [[Constructor]] call
     hops: service(Hops, ['water'] as const),
 };
@@ -114,4 +177,5 @@ type Services = typeof bottle.container;
 //     hops: Hops;
 //     water: Water;
 // }
+
 ```
