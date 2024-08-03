@@ -22,6 +22,23 @@ class Beer {
     ) {}
 }
 
+Deno.test('Bottle (typecheck)', async (t) => {
+    await t.step(
+        "should infer an impossible container when all deps can't be provided",
+        async () => {
+            const bottle = new Bottle({
+                hops: spy(({ water }: { water: Water }) => new Hops(water)),
+                waterrrrr: spy(() => new Water()),
+            });
+            assertThrows(() => {
+                // @ts-expect-error: should prevent container access as it is
+                // impossible to provide the "water" service required by "hops"
+                bottle.container.hops;
+            });
+        },
+    );
+});
+
 Deno.test('Bottle (standalone)', async (t) => {
     const providers = {
         barley: spy(({ water }: { water: Water }) => new Barley(water)),

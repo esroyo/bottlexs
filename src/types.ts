@@ -1,4 +1,13 @@
-type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
+export type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
+
+export type Ctor = new (...args: any[]) => any;
+
+export type CreateArray<
+    Length extends number,
+    Accumulator extends readonly any[] = readonly [],
+    Item = any,
+> = Accumulator['length'] extends Length ? Accumulator
+    : CreateArray<Length, readonly [...Accumulator, Item]>;
 
 type UnionToIntersection<Union> = (
     // `extends unknown` is always going to be the case and is used to convert the
@@ -76,3 +85,56 @@ export type MergedContainer<
     T extends Providers,
     U extends BottleLike | undefined = undefined,
 > = Simplify<RawMergedContainer<T, U>>;
+
+// type CreateRange<
+//     Length extends number,
+//     Accumulator extends any[] = [],
+//     Item extends number = Decrement<Length>,
+// > = Accumulator['length'] extends Length ? Accumulator
+//     : CreateRange<Length, [Item, ...Accumulator], Decrement<Item>>;
+
+type CreateRange<Length extends number> = Length extends 0 ? []
+    : Length extends 1 ? [0]
+    : Length extends 2 ? [0, 1]
+    : Length extends 3 ? [0, 1, 2]
+    : Length extends 4 ? [0, 1, 2, 3]
+    : Length extends 5 ? [0, 1, 2, 3, 4]
+    : Length extends 6 ? [0, 1, 2, 3, 4, 5]
+    : Length extends 7 ? [0, 1, 2, 3, 4, 5, 6]
+    : Length extends 8 ? [0, 1, 2, 3, 4, 5, 6, 7]
+    : Length extends 9 ? [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    : Length extends 10 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    : Length extends 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    : Length extends 12 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    : Length extends 13 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    : Length extends 14 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    : Length extends 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    : Length extends 16 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    : Length extends 17
+        ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    : Length extends 18
+        ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    : Length extends 19
+        ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19]
+    : never;
+
+export type AsContainer<
+    ParamTypes extends any[],
+    ParamNames extends (readonly ServiceName[] | undefined),
+> = ParamNames extends readonly ServiceName[] ? Simplify<
+        {
+            [
+                Index in CreateRange<
+                    ParamTypes['length']
+                >[number] as ParamNames[Index]
+            ]: ParamTypes[Index];
+        }
+    >
+    : Record<ServiceName, any>;
+
+export type ConstructorToFactory<
+    T extends Ctor,
+    U extends (readonly ServiceName[] | undefined),
+> = T extends (new (...args: infer A) => infer K)
+    ? ((container: AsContainer<A, U>) => K)
+    : never;

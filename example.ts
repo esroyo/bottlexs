@@ -1,4 +1,5 @@
 import { Bottle } from './src/bottle.ts';
+import { service } from './src/service.ts';
 
 class Water {}
 class Barley {
@@ -18,7 +19,9 @@ class Beer {
 
 const someProviders = {
     barley: ({ water }: { water: Water }) => new Barley(water),
-    hops: ({ water }: { water: Water }) => new Hops(water),
+    // It is possible to use the alternative `service` helper
+    // hops: ({ water }: { water: Water }) => new Hops(water),
+    hops: service(Hops, ['water'] as const),
     water: () => new Water(),
 };
 const someBottle = new Bottle(someProviders);

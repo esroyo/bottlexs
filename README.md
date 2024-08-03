@@ -7,7 +7,8 @@ A dependency injection ~~micro~~ nano container that draws inspiration from [Bot
 * ✨ Type inference of the services just works
 * ⚡ < 500 bytes (when minified, mangled and gzipped)
 * 🍺 Terse lazy-loading access to the services as in BottleJS 
-* 🏭 Supports (only) the [service factory](https://www.npmjs.com/package/bottlejs#service-factory) from BottleJS to define providers
+* 🏭 Supports (by default) the [service factory](https://www.npmjs.com/package/bottlejs#service-factory) pattern from BottleJS to define providers
+* 🔧 Supports the [service](https://www.npmjs.com/package/bottlejs#injecting-dependencies) pattern from BottleJS via and additional pure helper (tree-shakeable)
 * ♻️ Possiblity to reset the providers to re-instantiate a service
 * 🐾 Tracks dependencies: reseting a provider will reset all the dependents (opt-out possible)
 * 🔒 Favors immutability by taking the providers at construction time
@@ -34,7 +35,9 @@ class Beer {
 
 const someProviders = {
     barley: ({ water }: { water: Water }) => new Barley(water),
-    hops: ({ water }: { water: Water }) => new Hops(water),
+    // It is possible to use the alternative `service` helper
+    // hops: ({ water }: { water: Water }) => new Hops(water),
+    hops: service(Hops, ['water'] as const),
     water: () => new Water(),
 };
 const someBottle = new Bottle(someProviders);
