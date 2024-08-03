@@ -21,6 +21,7 @@
     "include": [
       "mod.ts",
       "src/",
+      "dist/",
       "README.md",
       "LICENSE",
       "CHANGELOG.md",
