@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.1](https://github.com/esroyo/bottlexs/compare/v0.5.0...v0.5.1) (2024-08-03)
+
+
+### Other
+
+* add example usage of the service helper ([a91db36](https://github.com/esroyo/bottlexs/commit/a91db36db59e6d679fabd6485630a31631b37b73))
+
 ## [0.5.0](https://github.com/esroyo/bottlexs/compare/v0.4.3...v0.5.0) (2024-08-03)
 
 
