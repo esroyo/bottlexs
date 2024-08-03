@@ -14,9 +14,13 @@ A dependency injection ~~micro~~ nano container that draws inspiration from [Bot
 * 🔒 Favors immutability by taking the providers at construction time
 * 🔌 Favors composability by inheriting from other containers
 
-## Basic usage
+## Usage examples
+
+### Multiple bottle instances
 
 ```ts
+import { Bottle, service } from 'jsr:@esroyo/bottlexs';
+
 class Water {}
 class Barley {
     constructor(public water: Water) {}
@@ -76,4 +80,38 @@ console.log(
         otherBottle.container.beer.water,
 );
 // true
+```
+
+### Using the service helper with constructors
+
+```ts
+import { Bottle, service } from 'jsr:@esroyo/bottlexs';
+
+class Water {}
+class Barley {
+    constructor(public water: Water) {}
+}
+class Hops {
+    constructor(public water: Water) {}
+}
+
+const providers = {
+    // The default Provider pattern is the Factory pattern:
+    // receives the container as parameter and returns an instance
+    barley: (container: { water: Water }) => new Barley(container.water),
+    water: () => new Water(),
+    // It is possible to use the alternative `service` helper:
+    // takes in a Constructor and a list of services to be resolved
+    // and passed as arguments to the [[Constructor]] call
+    hops: service(Hops, ['water'] as const),
+};
+const bottle = new Bottle(providers);
+
+// inferred type
+type Services = typeof bottle.container;
+// type SomeServices = {
+//     barley: Barley;
+//     hops: Hops;
+//     water: Water;
+// }
 ```
