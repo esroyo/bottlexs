@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.6.0](https://github.com/esroyo/bottlexs/compare/v0.5.1...v0.6.0) (2024-08-03)
+
+
+### Features
+
+* support for `serviceFactory` pattern ([3ef4aed](https://github.com/esroyo/bottlexs/commit/3ef4aed4c27896640882b7b5a608fddf23b7ab03))
+
 ## [0.5.1](https://github.com/esroyo/bottlexs/compare/v0.5.0...v0.5.1) (2024-08-03)
 
 
