@@ -138,3 +138,13 @@ export type ConstructorToFactory<
 > = T extends (new (...args: infer A) => infer K)
     ? ((container: AsContainer<A, U>) => K)
     : never;
+
+/** Basic shape of a ServiceFactory function */
+export type ServiceFactory = (...deps: any[]) => any;
+
+export type ServiceFactoryToFactory<
+    T extends ServiceFactory,
+    U extends (readonly ServiceName[] | undefined),
+> = T extends ((...args: infer A) => infer K)
+    ? ((container: AsContainer<A, U>) => K)
+    : never;

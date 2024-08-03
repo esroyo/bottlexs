@@ -1,16 +1,16 @@
 import type {
-    ConstructorToFactory,
     CreateArray,
-    Ctor,
+    ServiceFactory,
+    ServiceFactoryToFactory,
     ServiceName,
 } from './types.ts';
 
 /**
- * Builds a Factory from the given Constructor.
+ * Builds a Factory from the given ServiceFactory.
  *
  * The list of services must be constant to take advantage of type safety.
  *
- * When the returned Factory is invoked, the call to [[Construct]]
+ * When the returned Factory is invoked, the call to the original ServiceFactory
  * will receive the resolved services as arguments (ordered).
  *
  * @example
@@ -22,7 +22,7 @@ import type {
  *
  * const providers = {
  *    // Note the array is declared as const
- *    hops: service(Hops, ['water'] as const),
+ *    hops: serviceFactory((water: Water) => new Hops(water), ['water'] as const),
  *    water: () => new Water(),
  * };
  * const bottle = new Bottle(providers);
@@ -30,13 +30,13 @@ import type {
  * console.log(bottle.container.hops.water);
  * ```
  */
-export const service = <
-    T extends Ctor,
-    U extends CreateArray<ConstructorParameters<T>['length'], [], ServiceName>,
->(ctor: T, deps?: U): ConstructorToFactory<T, U> => {
+export const serviceFactory = <
+    T extends ServiceFactory,
+    U extends CreateArray<Parameters<T>['length'], [], ServiceName>,
+>(serviceFactory: T, deps?: U): ServiceFactoryToFactory<T, U> => {
     return ((container: Record<ServiceName, any>) => {
         const args = ((deps || []) as ServiceName[])
             .map((depName) => container[depName]);
-        return new ctor(...args);
-    }) as unknown as ConstructorToFactory<T, U>;
+        return serviceFactory(...args);
+    }) as unknown as ServiceFactoryToFactory<T, U>;
 };
