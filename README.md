@@ -6,8 +6,8 @@ A dependency injection ~~micro~~ nano container that draws inspiration from [Bot
 ## Features
 * ✨ Type inference of the services just works
 * ⚡ < 500 bytes (when minified and gzipped)
-* 🍺 Terse lazy-loading access to the services as in [BottleJS](https://www.npmjs.com/package/bottlejs#factoryname-factory)
-* 🏭 Supports (by default) the [service factory](https://www.npmjs.com/package/bottlejs#factoryname-factory) pattern from BottleJS
+* 🍺 Terse lazy-loading access to the services as in [BottleJS](https://www.npmjs.com/package/bottlejs#simple-example)
+* 🏭 Supports (by default) the [factory](https://www.npmjs.com/package/bottlejs#factoryname-factory) pattern from BottleJS
 * 🔧 Supports the [service](https://www.npmjs.com/package/bottlejs#servicename-constructor--dependency--) and [serviceFactory](https://www.npmjs.com/package/bottlejs#servicefactoryname-factoryservice--dependency--) patterns from BottleJS via additional pure helpers (tree-shakeable)
 * ♻️ Possiblity to reset the providers to re-instantiate a service
 * 🐾 Tracks dependencies: reseting a provider will reset all the dependents (opt-out possible)
